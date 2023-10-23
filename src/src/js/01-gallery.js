@@ -34,14 +34,24 @@ function onImageClick(e) {
 
   e.preventDefault();
 
-  const instance = basicLightbox.create(`
+  const instance = basicLightbox.create(
+    `
   <img src="${e.target.dataset.source}" width="800" height="600">
-  `);
+  `,
+    {
+      onShow: () => {
+        document.addEventListener("keydown", closeModal); // додавання слухача подій
+      },
+      onClose: () => {
+        document.removeEventListener("keydown", closeModal); // знімання слухача подій
+      },
+    }
+  );
   instance.show();
 
-  ulRef.addEventListener("keydown", (e) => {
-    if (e.code === "Escape") {
+  function closeModal(e) {
+    if (e.key === "Escape") {
       instance.close();
     }
-  });
+  }
 }
